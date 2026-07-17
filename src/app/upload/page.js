@@ -10,6 +10,15 @@ import { supabase } from '@/lib/supabase';
 const DISEASE_OPTIONS = ['Healthy', 'Dry Bubble', 'Wet Bubble', 'Cobweb', 'Bacterial Blotch', 'Green Mold', 'Other / Unknown'];
 const SENSOR_OPTIONS = [{ v: 'rgb', l: 'RGB photograph' }, { v: 'hsi', l: 'Hyperspectral' }, { v: 'thermal', l: 'Thermal' }];
 const STAGE_OPTIONS = ['Pinning', 'Button', 'Cup', 'Flat', 'Mature', 'Unknown'];
+const SPECIES_OPTIONS = [
+  { v: 'Agaricus bisporus',      l: 'Agaricus bisporus (button / white mushroom)' },
+  { v: 'Pleurotus ostreatus',    l: 'Pleurotus ostreatus (oyster mushroom)' },
+  { v: 'Lentinula edodes',       l: 'Lentinula edodes (shiitake)' },
+  { v: 'Flammulina velutipes',   l: 'Flammulina velutipes (enoki)' },
+  { v: 'Hericium erinaceus',     l: 'Hericium erinaceus (lion’s mane)' },
+  { v: 'Ganoderma lucidum',      l: 'Ganoderma lucidum (reishi)' },
+  { v: 'Other',                  l: 'Other / Unknown' },
+];
 
 export default function UploadPage() {
   const router = useRouter();
@@ -147,7 +156,9 @@ export default function UploadPage() {
             <div className="field-row">
               <div className="field">
                 <label>Species</label>
-                <input value={form.mushroom_species} onChange={onInput('mushroom_species')} />
+                <select value={form.mushroom_species} onChange={onInput('mushroom_species')}>
+                  {SPECIES_OPTIONS.map((s) => <option key={s.v} value={s.v}>{s.l}</option>)}
+                </select>
               </div>
               <div className="field">
                 <label>Growth stage</label>
