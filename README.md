@@ -5,7 +5,7 @@ integrated pest management decision support. A Penn State Mushroom Research Cent
 
 Built with Next.js 14 (App Router), Supabase (auth + database + storage), and
 in-browser ONNX inference via `onnxruntime-web`.
-
+ 
 ---
 
 ## What's inside
