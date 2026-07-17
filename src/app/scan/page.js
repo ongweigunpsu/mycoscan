@@ -55,7 +55,7 @@ export default function ScanPage() {
         ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/';
         ort.env.wasm.numThreads = 1;
         ortRef.current = ort;
-        const session = await ort.InferenceSession.create('/models/model.onnx', {
+        const session = await ort.InferenceSession.create('https://huggingface.co/mycoscan-psu/mycoscan-model/resolve/main/model.onnx', {
           executionProviders: ['wasm'],
         });
         if (cancelled) return;
