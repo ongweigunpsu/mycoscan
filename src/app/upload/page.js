@@ -1,0 +1,187 @@
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
+import { supabase } from '@/lib/supabase';
+
+const DISEASE_OPTIONS = ['Healthy', 'Dry Bubble', 'Wet Bubble', 'Cobweb', 'Bacterial Blotch', 'Green Mold', 'Other / Unknown'];
+const SENSOR_OPTIONS = [{ v: 'rgb', l: 'RGB photograph' }, { v: 'hsi', l: 'Hyperspectral' }, { v: 'thermal', l: 'Thermal' }];
+const STAGE_OPTIONS = ['Pinning', 'Button', 'Cup', 'Flat', 'Mature', 'Unknown'];
+
+export default function UploadPage() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [checked, setChecked] = useState(false);
+  const fileRef = useRef(null);
+
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [form, setForm] = useState({
+    disease_type: '', mushroom_species: 'Agaricus bisporus',
+    sensor_type: 'rgb', growth_stage: '', severity_grade: '', country: '', notes: '',
+  });
+  const [msg, setMsg] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => { setUser(data.user); setChecked(true); });
+  }, []);
+
+  const pickFile = (f) => {
+    if (!f) return;
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  const onInput = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+  const submit = async () => {
+    setMsg(null);
+    if (!file) { setMsg({ type: 'err', text: 'Choose an image to contribute.' }); return; }
+    if (!form.disease_type) { setMsg({ type: 'err', text: 'Select a disease label.' }); return; }
+    setBusy(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('mycoscan-images').upload(path, file);
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('mycoscan-images').getPublicUrl(path);
+
+      const { error: insErr } = await supabase.from('uploads').insert({
+        user_id: user.id,
+        user_email: user.email,
+        image_url: pub.publicUrl,
+        storage_path: path,
+        original_filename: file.name,
+        file_size_kb: Math.round(file.size / 1024),
+        ...form,
+      });
+      if (insErr) throw insErr;
+
+      setMsg({ type: 'ok', text: 'Contribution received. Thank you.' });
+      setTimeout(() => router.push('/dataset'), 1100);
+    } catch (e) {
+      setMsg({ type: 'err', text: e.message || 'Upload failed.' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (!checked) return (<><Nav /><div className="page"><div className="empty"><p>Loading…</p></div></div><Footer /></>);
+
+  if (!user) return (
+    <>
+      <Nav />
+      <div className="page page-narrow">
+        <div className="locked">
+          <div className="icon">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+          </div>
+          <h3>Sign in to contribute</h3>
+          <p>Contributing imagery requires an account so we can attribute your data.</p>
+          <Link href="/auth" className="btn btn-primary">Sign in or register</Link>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+
+  return (
+    <>
+      <Nav />
+      <div className="page page-narrow">
+        <div className="page-head">
+          <div className="eyebrow">Add to the collection</div>
+          <h1>Contribute imagery</h1>
+          <p>Share a labeled mushroom image with the research community. Contributions are open-access under CC BY-NC 4.0.</p>
+        </div>
+
+        <div className="panel panel-pad">
+          {/* Dropzone */}
+          <div className={`dropzone ${file ? 'has-file' : ''}`} onClick={() => fileRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); pickFile(e.dataTransfer.files?.[0]); }}>
+            {preview ? (
+              <div className="dz-preview">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={preview} alt="preview" />
+                <div className="dz-filename">{file.name}</div>
+              </div>
+            ) : (
+              <>
+                <div className="dz-icon">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                </div>
+                <div className="dz-text">Drop an image here, or click to browse</div>
+                <div className="dz-hint">JPG or PNG · up to ~10 MB</div>
+              </>
+            )}
+            <input ref={fileRef} type="file" accept="image/*" hidden
+              onChange={(e) => pickFile(e.target.files?.[0])} />
+          </div>
+
+          {/* Metadata */}
+          <div style={{ marginTop: 24 }}>
+            <div className="field-row">
+              <div className="field">
+                <label>Disease label</label>
+                <select value={form.disease_type} onChange={onInput('disease_type')}>
+                  <option value="">Select…</option>
+                  {DISEASE_OPTIONS.map((d) => <option key={d} value={d}>{d}</option>)}
+                </select>
+              </div>
+              <div className="field">
+                <label>Sensor modality</label>
+                <select value={form.sensor_type} onChange={onInput('sensor_type')}>
+                  {SENSOR_OPTIONS.map((s) => <option key={s.v} value={s.v}>{s.l}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="field-row">
+              <div className="field">
+                <label>Species</label>
+                <input value={form.mushroom_species} onChange={onInput('mushroom_species')} />
+              </div>
+              <div className="field">
+                <label>Growth stage</label>
+                <select value={form.growth_stage} onChange={onInput('growth_stage')}>
+                  <option value="">Select…</option>
+                  {STAGE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="field-row">
+              <div className="field">
+                <label>Country / region <span style={{ color: 'var(--ink4)', fontWeight: 400 }}>(optional)</span></label>
+                <input value={form.country} onChange={onInput('country')} placeholder="e.g. United States" />
+              </div>
+              <div className="field">
+                <label>Severity note <span style={{ color: 'var(--ink4)', fontWeight: 400 }}>(optional)</span></label>
+                <input value={form.severity_grade} onChange={onInput('severity_grade')} placeholder="e.g. early / advanced" />
+              </div>
+            </div>
+            <div className="field">
+              <label>Notes <span style={{ color: 'var(--ink4)', fontWeight: 400 }}>(optional)</span></label>
+              <textarea value={form.notes} onChange={onInput('notes')}
+                placeholder="Cultivation conditions, observations, or context…" />
+            </div>
+
+            {msg && <div className={`form-msg ${msg.type}`}>{msg.text}</div>}
+
+            <button className="btn btn-primary btn-lg" style={{ marginTop: 8 }} onClick={submit} disabled={busy}>
+              {busy ? 'Uploading…' : 'Contribute to dataset'}
+            </button>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+}
