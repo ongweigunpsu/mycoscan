@@ -50,6 +50,7 @@ export default function Nav() {
           <li><Link href="/dataset" className={is('/dataset') ? 'active' : ''}>Dataset</Link></li>
           <li><Link href="/scan" className={is('/scan') ? 'active' : ''}>Identify</Link></li>
           <li><Link href="/library" className={is('/library') ? 'active' : ''}>Disease Library</Link></li>
+          <li><Link href="/team" className={is('/team') ? 'active' : ''}>Team</Link></li>
           <li><Link href="/about" className={is('/about') ? 'active' : ''}>About</Link></li>
         </ul>
 
