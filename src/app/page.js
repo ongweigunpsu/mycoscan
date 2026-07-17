@@ -4,31 +4,12 @@ import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-const MODULES = [
-  {
-    num: '01',
-    title: 'Community Dataset',
-    desc: 'Browse and contribute open-access mushroom disease imagery — RGB, hyperspectral, and thermal — with structured metadata for cultivar, sensor, and growth stage.',
-    href: '/dataset',
-  },
-  {
-    num: '02',
-    title: 'Disease Identification',
-    desc: 'Upload a photograph and receive an instant classification across five disease states, computed entirely in your browser. No image leaves your device.',
-    href: '/scan',
-  },
-  {
-    num: '03',
-    title: 'IPM Decision Support',
-    desc: 'Translate a diagnosis into region-appropriate management actions — chemical, biological, and preventive — filtered to what is legally available where you grow.',
-    href: '/scan',
-  },
-  {
-    num: '04',
-    title: 'Disease Library',
-    desc: 'A reference collection of the major pathogens of cultivated mushrooms, documenting symptoms, life cycle, and management for each.',
-    href: '/library',
-  },
+const DISEASES = [
+  { code: 'H',  label: 'Healthy',          desc: 'baseline morphology',   color: '#2E8B6F', img: '/images/healthy.jpg' },
+  { code: 'BB', label: 'Bacterial Blotch', desc: 'cap discoloration',     color: '#C8922E', img: '/images/bacterial-spot.jpg' },
+  { code: 'CW', label: 'Cobweb',           desc: 'mycelial overgrowth',   color: '#C8922E', img: '/images/spider-web.jpg' },
+  { code: 'DB', label: 'Dry Bubble',       desc: 'necrotic distortion',   color: '#C0611E', img: '/images/dry-blister.jpg' },
+  { code: 'WB', label: 'Wet Bubble',       desc: 'amber exudate masses',  color: '#C0611E', img: '/images/wet-blister.jpg' },
 ];
 
 export default function Home() {
@@ -61,26 +42,27 @@ export default function Home() {
                 <span className="cat">DISEASE STATES</span>
               </div>
               <div className="specimen-grades">
-                <div className="sg-row">
-                  <span className="sg-chip" style={{ background: '#2E8B6F' }}>H</span>
-                  <span className="sg-label"><strong>Healthy</strong> — baseline morphology</span>
-                </div>
-                <div className="sg-row">
-                  <span className="sg-chip" style={{ background: '#C8922E' }}>BB</span>
-                  <span className="sg-label"><strong>Bacterial Blotch</strong> — cap discoloration</span>
-                </div>
-                <div className="sg-row">
-                  <span className="sg-chip" style={{ background: '#C8922E' }}>CW</span>
-                  <span className="sg-label"><strong>Cobweb</strong> — mycelial overgrowth</span>
-                </div>
-                <div className="sg-row">
-                  <span className="sg-chip" style={{ background: '#C0611E' }}>DB</span>
-                  <span className="sg-label"><strong>Dry Bubble</strong> — necrotic distortion</span>
-                </div>
-                <div className="sg-row">
-                  <span className="sg-chip" style={{ background: '#C0611E' }}>WB</span>
-                  <span className="sg-label"><strong>Wet Bubble</strong> — amber exudate masses</span>
-                </div>
+                {DISEASES.map((d) => (
+                  <div className="sg-row" key={d.code}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={d.img}
+                      alt={d.label}
+                      className="sg-thumb"
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 8,
+                        objectFit: 'cover',
+                        border: `2px solid ${d.color}`,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span className="sg-label" style={{ marginLeft: 12 }}>
+                      <strong>{d.label}</strong> — {d.desc}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -96,32 +78,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODULES */}
-      <section className="modules">
-        <div className="modules-head">
-          <div className="eyebrow">What the platform does</div>
-          <h2>Four tools, one workflow</h2>
-          <p>From a field photograph to a management decision — each part of MycoScan is open and built to work together.</p>
-        </div>
-        <div className="module-grid">
-          {MODULES.map((m) => (
-            <Link href={m.href} key={m.num} className="module">
-              <span className="module-num">{m.num}</span>
-              <h3>{m.title}</h3>
-              <p>{m.desc}</p>
-              <span className="module-arrow">Open →</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* PARTNERS */}
       <section className="partners">
         <div className="partners-inner">
           <span className="partners-label">A collaboration of</span>
           <span className="partner-item">Penn State Mushroom Research Center</span>
           <span className="partner-item">Dept. of Agricultural &amp; Biological Engineering</span>
-          <span className="partner-item">Selçuk University</span>
+          <span className="partner-item">Dept. of Plant Pathology &amp; Environmental Microbiology</span>
         </div>
       </section>
 
