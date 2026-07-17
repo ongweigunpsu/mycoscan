@@ -15,6 +15,31 @@ export default function Footer() {
               advancing sustainable mushroom cultivation worldwide.
             </p>
           </div>
+          <div className="footer-qr">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/mycoscan-qr.png"
+              alt="Scan to open MycoScan"
+              style={{
+                width: 130,
+                height: 130,
+                borderRadius: 10,
+                background: 'white',
+                padding: 6,
+              }}
+            />
+            <span style={{
+              display: 'block',
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--ink4)',
+              marginTop: 8,
+              textAlign: 'center',
+            }}>
+              Scan to open
+            </span>
+          </div>
           <div className="footer-cols">
             <div className="footer-col">
               <h4>Platform</h4>
@@ -26,6 +51,7 @@ export default function Footer() {
             <div className="footer-col">
               <h4>Program</h4>
               <Link href="/about">About the Project</Link>
+              <Link href="/team">Team</Link>
               <a href="https://plantscience.psu.edu/research/centers/mushroom" target="_blank" rel="noopener noreferrer">Mushroom Research Center</a>
               <a href="https://abe.psu.edu" target="_blank" rel="noopener noreferrer">Dept. of ABE</a>
             </div>
