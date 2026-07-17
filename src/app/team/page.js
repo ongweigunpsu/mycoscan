@@ -13,7 +13,7 @@ const TEAM = [
       'Precision agriculture, agricultural robotics, and machine learning for early plant-disease detection. Leads the MycoScan initiative and directs the research program on hyperspectral and RGB imaging for controlled-environment agriculture.',
     email: 'spg5994@psu.edu',
     link: 'https://abe.psu.edu/directory/spg5994',
-    initials: 'SG',
+    photo: '/images/shirin.jpg',
   },
   {
     name: 'David M. Beyer, Ph.D.',
@@ -24,7 +24,7 @@ const TEAM = [
       'Mushroom cultivation, composting, mushroom nutrition and physiology, and IPM for mushroom cultivation. Directs mushroom extension services for the North American mushroom industry and co-organizes the Penn State Mushroom Short Course.',
     email: 'dmb8@psu.edu',
     link: 'https://plantpath.psu.edu/directory/dmb8',
-    initials: 'DB',
+    photo: '/images/david.jpg',
   },
   {
     name: 'Weiqun Wang',
@@ -35,7 +35,7 @@ const TEAM = [
       'Doctoral research on hyperspectral imaging and deep learning for early detection of dry bubble disease in Agaricus bisporus. Designed and built the MycoScan platform end to end — from data pipeline and model deployment to UI.',
     email: 'wfw5324@psu.edu',
     link: 'https://abe.psu.edu/directory/wfw5324',
-    initials: 'WW',
+    photo: '/images/weiqun.jpg',
   },
 ];
 
@@ -65,29 +65,24 @@ export default function TeamPage() {
                 padding: 28,
                 background: 'var(--bg1)',
                 display: 'grid',
-                gridTemplateColumns: '72px 1fr',
-                gap: 22,
+                gridTemplateColumns: '120px 1fr',
+                gap: 26,
                 alignItems: 'start',
               }}
             >
-              <div
-                aria-hidden="true"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.photo}
+                alt={p.name}
                 style={{
-                  width: 72,
-                  height: 72,
+                  width: 120,
+                  height: 120,
                   borderRadius: 10,
-                  background: 'var(--ink1)',
-                  color: 'var(--bg0)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontFamily: 'var(--serif, Spectral, Georgia, serif)',
-                  fontSize: 26,
-                  fontWeight: 500,
-                  letterSpacing: '0.02em',
+                  objectFit: 'cover',
+                  border: '1px solid var(--line1)',
+                  background: 'var(--bg0)',
                 }}
-              >
-                {p.initials}
-              </div>
+              />
               <div>
                 <div
                   style={{
