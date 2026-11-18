@@ -65,6 +65,15 @@ export default function UploadPage() {
     if (!consentComplete) { setMsg({ type: 'err', text: 'Please accept the contribution terms first.' }); return; }
     setBusy(true);
     try {
+      // Optional fields left blank arrive here as ''. Postgres rejects '' on
+      // any numeric column, and '' is poor data on a text one, so send NULL.
+      const cleanForm = Object.fromEntries(
+        Object.entries(form).map(([k, v]) => [
+          k,
+          typeof v === 'string' && v.trim() === '' ? null : v,
+        ])
+      );
+
       // Destroy GPS and all other embedded metadata before anything leaves
       // the device. See /privacy and /data-license.
       const clean = await sanitizeImage(file);
@@ -89,7 +98,7 @@ export default function UploadPage() {
         consent_accepted_at: new Date().toISOString(),
         attribution_kind: attribution,
         attribution_value: attribution === 'anonymous' ? null : attributionValue.trim(),
-        ...form,
+        ...cleanForm,
       });
       if (insErr) throw insErr;
 
