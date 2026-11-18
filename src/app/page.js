@@ -70,11 +70,17 @@ export default function Home() {
 
         <div className="hero-stats">
           <div className="hero-stats-inner">
-            <div className="hstat"><span className="num">98.7%</span><span className="lbl">Model accuracy</span></div>
+            <div className="hstat"><span className="num">98.7%</span><span className="lbl">Studio-set accuracy</span></div>
             <div className="hstat"><span className="num">5</span><span className="lbl">Disease states</span></div>
             <div className="hstat"><span className="num">3</span><span className="lbl">Sensor modalities</span></div>
             <div className="hstat"><span className="num">Open</span><span className="lbl">CC BY-NC 4.0</span></div>
           </div>
+          <p className="stat-caveat">
+            Accuracy measured on held-out studio imagery. The model is not
+            validated on production-room photographs, where performance is
+            substantially lower.{' '}
+            <Link href="/model-card">See the model card.</Link>
+          </p>
         </div>
       </section>
 
