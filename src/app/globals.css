@@ -644,3 +644,47 @@ a:hover { color: var(--nittany); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ============================================================
+   POLICY & DOCUMENTATION PAGES
+   Model card, terms, privacy, contributor agreement
+   ============================================================ */
+.legal-callout {
+  max-width: 680px;
+  margin: 0 0 28px;
+  padding: 18px 22px;
+  background: var(--sky-wash);
+  border-left: 3px solid var(--beaver);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.legal-callout h3 {
+  font-family: var(--serif); font-size: 17px; font-weight: 600;
+  color: var(--nittany); margin: 0 0 8px;
+}
+.legal-callout p { font-size: 14.5px; color: var(--ink2); line-height: 1.7; margin: 0; }
+
+.about-body .legal-list { margin: 0 0 18px; padding-left: 20px; }
+.about-body .legal-list li { margin-bottom: 9px; line-height: 1.7; }
+
+.spec-list { margin: 0 0 22px; border-top: 1px solid var(--line); max-width: 680px; }
+.spec-list > div {
+  display: flex; gap: 20px; padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.spec-list dt {
+  flex: 0 0 150px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3);
+  padding-top: 2px;
+}
+.spec-list dd { flex: 1; margin: 0; font-size: 14.5px; color: var(--ink); }
+
+.stat-caveat {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 28px 22px;
+  font-size: 12.5px; line-height: 1.6; color: var(--pugh);
+}
+.stat-caveat a { color: #fff; text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .spec-list > div { flex-direction: column; gap: 3px; }
+  .spec-list dt { flex: none; }
+}
