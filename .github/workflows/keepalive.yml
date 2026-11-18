@@ -1,0 +1,62 @@
+# Keeps the Supabase project from auto-pausing after a week without traffic.
+#
+# A paused free-tier project takes the whole site down: auth fails, the
+# dataset page errors. For a platform that is live but not yet promoted,
+# this is the most likely cause of an outage.
+#
+# Setup (see KEEPALIVE_SETUP.md):
+#   1. Run supabase-keepalive.sql in the Supabase SQL Editor.
+#   2. Add three repository secrets under
+#      Settings > Secrets and variables > Actions:
+#        SUPABASE_URL       https://<project-ref>.supabase.co
+#        SUPABASE_ANON_KEY  the publishable key: sb_publishable_... ,
+#                           or a legacy anon key. NEVER sb_secret_... .
+#        SITE_URL           https://mycoscan-beryl.vercel.app
+#   3. Commit this file, then run it once by hand from the Actions tab.
+#
+# Note: GitHub disables scheduled workflows in repositories with no activity
+# for 60 days. If the repo goes quiet, re-enable it in the Actions tab.
+
+name: Keepalive
+
+on:
+  schedule:
+    # Twice a week, off-peak, well inside the one-week pause window.
+    - cron: "17 7 * * 1,4"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping Supabase REST endpoint
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          # Only the apikey header. Supabase's newer sb_publishable_* keys are
+          # not JWTs, so an "Authorization: Bearer <key>" header is rejected.
+          # apikey alone works for both the new and the legacy anon key.
+          code=$(curl -sS -o /tmp/body -w '%{http_code}' \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/keepalive?select=id&limit=1")
+          echo "supabase status = ${code}"
+          cat /tmp/body; echo
+          if [ "${code}" -ge 400 ]; then
+            echo "::error::Supabase ping returned ${code}. Project may be paused, or the key/URL is wrong."
+            exit 1
+          fi
+
+      - name: Ping the site
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "${SITE_URL}")
+          echo "site status = ${code}"
+          [ "${code}" -lt 400 ] || { echo "::error::Site returned ${code}"; exit 1; }
