@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { DATA_LICENSE } from '@/lib/legal-config';
 
 export default function Footer() {
   return (
@@ -57,8 +58,16 @@ export default function Footer() {
             </div>
             <div className="footer-col">
               <h4>Access</h4>
-              <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a>
+              <a href={DATA_LICENSE.url} target="_blank" rel="noopener noreferrer">{DATA_LICENSE.short}</a>
               <Link href="/auth">Sign in</Link>
+            </div>
+            <div className="footer-col">
+              <h4>Policies</h4>
+              <Link href="/terms">Terms of Use</Link>
+              <Link href="/privacy">Privacy Policy</Link>
+              <Link href="/data-license">Contributor Agreement</Link>
+              <Link href="/model-card">Model Card</Link>
+              <Link href="/contact">Contact</Link>
             </div>
           </div>
         </div>
@@ -67,7 +76,7 @@ export default function Footer() {
             © 2026 The Pennsylvania State University · Department of Agricultural
             and Biological Engineering · Mushroom Research Center
           </p>
-          <p className="mono">Data licensed under CC BY-NC 4.0</p>
+          <p className="mono">Data licensed under {DATA_LICENSE.short}</p>
         </div>
       </div>
     </footer>
