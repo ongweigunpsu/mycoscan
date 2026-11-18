@@ -36,6 +36,14 @@ export const PROJECT = {
   // contact is worse than no policy page.
   contactEmail: 'wfw5324@psu.edu',
 
+  // Policy page dates. Update when a policy materially changes.
+  effectiveDate: 'November 18, 2026',
+  lastUpdated: 'November 18, 2026',
+
+  // Bump when the Contributor Agreement changes materially. Stored with
+  // every consent record so you can tell which version someone accepted.
+  agreementVersion: '2026-11-18',
+
   // ROAR group storage. Master copy of imagery.
   groupStoragePath: '/storage/group/spg5994/default',
 };
