@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
@@ -44,11 +45,23 @@ export default function AboutPage() {
 
           <h3>The identification model</h3>
           <p>
-            The classifier is a ResNet-50 network trained on white-light imagery of
-            <em> Agaricus bisporus </em> disease states, reaching 98.7% accuracy on a
-            held-out test set. It runs locally through the browser using ONNX Runtime,
-            so identification is fast, private, and free to use. As the community dataset
-            grows, the model will be periodically retrained and expanded.
+            The classifier is a ResNet-50 network trained on studio-acquired
+            white-light imagery of <em>Agaricus bisporus</em> disease states. It
+            reaches 98.7% accuracy on a held-out split of that same studio
+            dataset. It runs locally through the browser using ONNX Runtime, so
+            identification is fast, private, and free to use.
+          </p>
+          <p>
+            That figure describes studio conditions only. Evaluated against
+            imagery from Penn State production rooms, roughly 80% of samples
+            were misclassified, and the model is not validated for use on
+            production-house photographs. The gap is caused by distribution
+            shift: growing-room lighting, dense beds, casing soil in frame, and
+            phone camera processing all differ from the training images.
+            Narrowing it requires labelled production imagery, which is the
+            purpose of the community dataset. The{' '}
+            <Link href="/model-card">model card</Link> documents the evaluation,
+            the intended use, and the known failure modes in full.
           </p>
 
           <h3>Open access</h3>
