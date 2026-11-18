@@ -688,3 +688,45 @@ a:hover { color: var(--nittany); }
   .spec-list > div { flex-direction: column; gap: 3px; }
   .spec-list dt { flex: none; }
 }
+
+/* ---- policy page meta line ---- */
+.page-head .legal-dates {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em;
+  color: var(--ink4); margin-top: 6px;
+}
+.legal-cite {
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.7;
+  background: var(--paper2); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 14px 16px; margin: 0 0 18px;
+  max-width: 680px; overflow-x: auto; white-space: pre; color: var(--ink2);
+}
+
+/* ---- contribution consent gate ---- */
+.consent-box {
+  border: 1px solid var(--line2); border-radius: var(--r);
+  background: var(--sky-wash); padding: 18px 20px 20px; margin: 26px 0 18px;
+}
+.consent-box legend {
+  font-family: var(--serif); font-size: 16px; font-weight: 600;
+  color: var(--nittany); padding: 0 8px;
+}
+.consent-intro { font-size: 13px; color: var(--ink2); margin-bottom: 14px; }
+.consent-intro a, .consent-item a { color: var(--beaver); text-decoration: underline; }
+
+.consent-item {
+  display: flex; gap: 11px; align-items: flex-start;
+  font-size: 13.5px; line-height: 1.6; color: var(--ink2);
+  margin-bottom: 12px; cursor: pointer;
+}
+.consent-item input[type="checkbox"] {
+  width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0;
+  accent-color: var(--beaver); cursor: pointer;
+}
+.consent-item input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--beaver); outline-offset: 2px;
+}
+
+.consent-status {
+  font-size: 12.5px; font-weight: 500; color: var(--ink3);
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line2);
+}
