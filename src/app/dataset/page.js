@@ -22,7 +22,7 @@ export default function DatasetPage() {
     (async () => {
       setLoading(true);
       const { data, error } = await supabase
-        .from('uploads')
+        .from('uploads_public')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(120);
